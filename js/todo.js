@@ -4,12 +4,31 @@ var completeSVG = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:x
 
 
 
-document.getElementById('add').addEventListener('click', function(){
+document.getElementById('add').addEventListener('click', function() {
   var value = document.getElementById('item').value;
     if(value)
       addItemTodo(value);
+      document.getElementById('item').value = '';
 
 });
+
+function removeItem() {
+  var item = this.parentNode.parentNode;
+  var parent = item.parentNode;
+
+  parent.removeChild(item);
+}
+
+function completeItem() {
+  var item = this.parentNode.parentNode;
+  var parent = item.parentNode;
+  var id = parent.id;
+
+  var target = (id === 'todo') ? document.getElementById('completed'):document.getElementById('todo');
+
+  parent.removeChild(item);
+  target.insertBefore(item, target.childNodes[0]);
+}
 
 function addItemTodo(text) {
   var list = document.getElementById('todo');
@@ -24,13 +43,17 @@ function addItemTodo(text) {
   remove.classList.add('remove');
   remove.innerHTML = removeSVG
 
+  remove.addEventListener('click', removeItem);
+
   var complete = document.createElement('button');
   complete.classList.add('complete');
   complete.innerHTML = completeSVG
+
+  complete.addEventListener('click', completeItem);
 
   buttons.appendChild(remove);
   buttons.appendChild(complete);
   item.appendChild(buttons);
 
-  list.appendChild(item);
+  list.insertBefore(item, list.childNodes[0]);
 }
